@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vehicle Maintenance Log</title>
+    <!-- PWA manifest for installability -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <style>
+        /* Simple CSS for forms/lists */
+        body { font-family: sans-serif; max-width: 800px; margin: auto; }
+        .log-entry { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Vehicle Maintenance Log</h1>
+    <form id="logForm">
+        <input type="date" id="date" required>
+        <input type="number" id="mileage" placeholder="Mileage" required>
+        <input type="text" id="description" placeholder="Service/Notes" required>
+        <button type="submit">Add Log</button>
+    </form>
+    <div id="logs"></div>
+
+    <script>
+        const form = document.getElementById('logForm');
+        const logsDiv = document.getElementById('logs');
+        let logs = JSON.parse(localStorage.getItem('maintenanceLogs') || '[]');
+
+        function renderLogs() {
+            logsDiv.innerHTML = logs.map(log => `
+                <div class="log-entry">
+                    <strong>${log.date}</strong> - Mileage: ${log.mileage}<br>
+                    ${log.description}
+                </div>
+            `).join('');
+        }
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const newLog = {
+                date: document.getElementById('date').value,
+                mileage: document.getElementById('mileage').value,
+                description: document.getElementById('description').value
+            };
+            logs.push(newLog);
+            localStorage.setItem('maintenanceLogs', JSON.stringify(logs));
+            renderLogs();
+            form.reset();
+        });
+
+        renderLogs();
+    </script>
+    <!-- Service worker for offline/PWA features -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
+</body>
+</html>
