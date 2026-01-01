@@ -2,60 +2,547 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vehicle Maintenance Log</title>
-    <!-- PWA manifest for installability -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Vehicle Maintenance</title>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
     <style>
-        /* Simple CSS for forms/lists */
-        body { font-family: sans-serif; max-width: 800px; margin: auto; }
-        .log-entry { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            margin-top: 8px;
+        }
+        
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .logs-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+        
+        .log-entry {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+        
+        .log-date {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 16px;
+        }
+        
+        .log-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .type-maintenance { background: #e3f2fd; color: #1976d2; }
+        .type-repair { background: #fff3e0; color: #f57c00; }
+        .type-inspection { background: #f3e5f5; color: #7b1fa2; }
+        .type-other { background: #e8f5e9; color: #388e3c; }
+        
+        .log-mileage {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .log-description {
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        
+        .log-cost {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #ff5252;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .toggle-form {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+            z-index: 100;
+        }
+        
+        .form-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .form-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+                padding-bottom: 80px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .stat-value {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Vehicle Maintenance Log</h1>
-    <form id="logForm">
-        <input type="date" id="date" required>
-        <input type="number" id="mileage" placeholder="Mileage" required>
-        <input type="text" id="description" placeholder="Service/Notes" required>
-        <button type="submit">Add Log</button>
-    </form>
-    <div id="logs"></div>
-
+    <div class="container">
+        <header>
+            <h1>🚗 Vehicle Maintenance</h1>
+            <p class="subtitle">Track your vehicle's service history</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Logs</div>
+                <div class="stat-value" id="totalLogs">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Spent</div>
+                <div class="stat-value" id="totalCost">$0</div>
+            </div>
+        </div>
+        
+        <div class="logs-header">
+            <h2 class="logs-title">Service History</h2>
+        </div>
+        
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="maintenance">Maintenance</button>
+            <button class="filter-btn" data-filter="repair">Repair</button>
+            <button class="filter-btn" data-filter="inspection">Inspection</button>
+        </div>
+        
+        <div id="logs"></div>
+    </div>
+    
+    <button class="toggle-form" id="toggleForm">+</button>
+    
+    <div class="form-modal" id="formModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Service Log</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            
+            <form id="logForm">
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mileage">Mileage</label>
+                    <input type="number" id="mileage" placeholder="e.g., 45000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="type">Service Type</label>
+                    <select id="type" required>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="repair">Repair</option>
+                        <option value="inspection">Inspection</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" placeholder="e.g., Oil change, tire rotation" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cost">Cost (optional)</label>
+                    <input type="number" id="cost" placeholder="0.00" step="0.01" min="0">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <span>Add Service Log</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+            </form>
+        </div>
+    </div>
+    
     <script>
         const form = document.getElementById('logForm');
         const logsDiv = document.getElementById('logs');
+        const formModal = document.getElementById('formModal');
+        const toggleFormBtn = document.getElementById('toggleForm');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const totalLogsEl = document.getElementById('totalLogs');
+        const totalCostEl = document.getElementById('totalCost');
+        
         let logs = JSON.parse(localStorage.getItem('maintenanceLogs') || '[]');
-
+        let currentFilter = 'all';
+        
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+        
+        function updateStats() {
+            totalLogsEl.textContent = logs.length;
+            const total = logs.reduce((sum, log) => sum + (parseFloat(log.cost) || 0), 0);
+            totalCostEl.textContent = '$' + total.toFixed(2);
+        }
+        
         function renderLogs() {
-            logsDiv.innerHTML = logs.map(log => `
+            const filteredLogs = currentFilter === 'all' 
+                ? logs 
+                : logs.filter(log => log.type === currentFilter);
+            
+            if (filteredLogs.length === 0) {
+                logsDiv.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>No service logs yet. Tap the + button to add your first entry!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by date (newest first)
+            const sortedLogs = [...filteredLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            logsDiv.innerHTML = sortedLogs.map((log, index) => `
                 <div class="log-entry">
-                    <strong>${log.date}</strong> - Mileage: ${log.mileage}<br>
-                    ${log.description}
+                    <button class="delete-btn" onclick="deleteLog(${logs.indexOf(log)})">×</button>
+                    <div class="log-header">
+                        <div class="log-date">${new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                        <span class="log-type type-${log.type}">${log.type}</span>
+                    </div>
+                    <div class="log-mileage">📍 ${parseInt(log.mileage).toLocaleString()} miles</div>
+                    <div class="log-description">${log.description}</div>
+                    ${log.cost ? `<div class="log-cost">💰 $${parseFloat(log.cost).toFixed(2)}</div>` : ''}
                 </div>
             `).join('');
+            
+            updateStats();
         }
-
+        
+        function deleteLog(index) {
+            if (confirm('Delete this service log?')) {
+                logs.splice(index, 1);
+                localStorage.setItem('maintenanceLogs', JSON.stringify(logs));
+                renderLogs();
+            }
+        }
+        
+        // Modal controls
+        toggleFormBtn.addEventListener('click', () => {
+            formModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        function closeModal() {
+            formModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        formModal.addEventListener('click', (e) => {
+            if (e.target === formModal) closeModal();
+        });
+        
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderLogs();
+            });
+        });
+        
+        // Form submission
         form.addEventListener('submit', e => {
             e.preventDefault();
             const newLog = {
                 date: document.getElementById('date').value,
                 mileage: document.getElementById('mileage').value,
-                description: document.getElementById('description').value
+                type: document.getElementById('type').value,
+                description: document.getElementById('description').value,
+                cost: document.getElementById('cost').value || '0'
             };
             logs.push(newLog);
             localStorage.setItem('maintenanceLogs', JSON.stringify(logs));
             renderLogs();
             form.reset();
+            document.getElementById('date').valueAsDate = new Date();
+            closeModal();
         });
-
+        
         renderLogs();
-    </script>
-    <!-- Service worker for offline/PWA features -->
-    <script>
+        
+        // Service worker for PWA
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
     </script>
 </body>
