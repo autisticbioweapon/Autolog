@@ -543,10 +543,18 @@
             </div>
             
             <div class="menu-item" id="shareData">
-                <span class="menu-icon">📱</span>
+                <span class="menu-icon">📤</span>
                 <div class="menu-text">
                     <span class="menu-label">Share via QR Code</span>
-                    <span class="menu-desc">Transfer to another device</span>
+                    <span class="menu-desc">Generate QR code for another device</span>
+                </div>
+            </div>
+            
+            <div class="menu-item" id="scanQR">
+                <span class="menu-icon">📷</span>
+                <div class="menu-text">
+                    <span class="menu-label">Scan QR Code</span>
+                    <span class="menu-desc">Import data from another device</span>
                 </div>
             </div>
             
@@ -569,32 +577,51 @@
             </div>
             <p style="color: #666; margin-bottom: 20px;">Scan this QR code with your other device to transfer all data</p>
             <div id="qrcode" style="display: inline-block; padding: 20px; background: white;"></div>
-            <p style="color: #666; margin-top: 20px; font-size: 12px;">Open this app on another device and tap "Import Data" after scanning</p>
+            <p style="color: #666; margin-top: 20px; font-size: 12px;">Open this app on another device and tap "Scan QR Code" from the menu</p>
+        </div>
+    </div>
+    
+    <!-- QR Scanner Modal -->
+    <div class="menu-modal" id="scanModal">
+        <div class="modal-content" style="text-align: center;">
+            <div class="modal-header">
+                <h2 class="modal-title">Scan QR Code</h2>
+                <button class="close-btn" id="closeScanModal">&times;</button>
+            </div>
+            <p style="color: #666; margin-bottom: 20px;">Position the QR code within the frame</p>
+            <video id="qrVideo" style="width: 100%; max-width: 400px; border-radius: 12px; background: #000;"></video>
+            <p style="color: #666; margin-top: 20px; font-size: 12px;">Camera access required to scan</p>
         </div>
     </div>
     
     <input type="file" id="fileInput" class="file-input" accept=".json">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
     <script>
         const form = document.getElementById('logForm');
         const logsDiv = document.getElementById('logs');
         const formModal = document.getElementById('formModal');
         const menuModal = document.getElementById('menuModal');
         const qrModal = document.getElementById('qrModal');
+        const scanModal = document.getElementById('scanModal');
         const toggleFormBtn = document.getElementById('toggleForm');
         const closeModalBtn = document.getElementById('closeModal');
         const cancelBtn = document.getElementById('cancelBtn');
         const menuBtn = document.getElementById('menuBtn');
         const closeMenuModalBtn = document.getElementById('closeMenuModal');
         const closeQrModalBtn = document.getElementById('closeQrModal');
+        const closeScanModalBtn = document.getElementById('closeScanModal');
         const totalLogsEl = document.getElementById('totalLogs');
         const totalCostEl = document.getElementById('totalCost');
         const fileInput = document.getElementById('fileInput');
         const syncStatusEl = document.getElementById('syncStatus');
+        const qrVideo = document.getElementById('qrVideo');
         
         let logs = JSON.parse(localStorage.getItem('maintenanceLogs') || '[]');
         let currentFilter = 'all';
+        let scanning = false;
+        let videoStream = null;
         
         // Set today's date as default
         document.getElementById('date').valueAsDate = new Date();
@@ -722,6 +749,79 @@
             qrModal.classList.add('active');
         });
         
+        // Scan QR Code
+        document.getElementById('scanQR').addEventListener('click', async () => {
+            closeMenuModal();
+            scanModal.classList.add('active');
+            
+            try {
+                videoStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } 
+                });
+                qrVideo.srcObject = videoStream;
+                qrVideo.play();
+                scanning = true;
+                requestAnimationFrame(scanQRCode);
+            } catch (err) {
+                alert('Camera access denied. Please enable camera permissions in your browser settings.');
+                closeScanModalFunc();
+            }
+        });
+        
+        function scanQRCode() {
+            if (!scanning) return;
+            
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
+                canvas.height = qrVideo.videoHeight;
+                canvas.width = qrVideo.videoWidth;
+                context.drawImage(qrVideo, 0, 0, canvas.width, canvas.height);
+                
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (code) {
+                    scanning = false;
+                    stopCamera();
+                    processQRData(code.data);
+                    return;
+                }
+            }
+            
+            requestAnimationFrame(scanQRCode);
+        }
+        
+        function stopCamera() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+        }
+        
+        function processQRData(data) {
+            try {
+                // Check if it's a URL with import hash
+                if (data.includes('#import=')) {
+                    const hash = data.split('#import=')[1];
+                    const importedLogs = JSON.parse(atob(hash));
+                    
+                    if (confirm(`Import ${importedLogs.length} logs from QR code?`)) {
+                        logs = importedLogs;
+                        localStorage.setItem('maintenanceLogs', JSON.stringify(logs));
+                        renderLogs();
+                        showStatus('Data imported successfully!', 'success');
+                    }
+                } else {
+                    alert('Invalid QR code. Please scan a QR code generated by this app.');
+                }
+            } catch (error) {
+                alert('Error reading QR code data.');
+            }
+            closeScanModalFunc();
+        }
+        
         // Check for import data in URL hash
         if (window.location.hash.startsWith('#import=')) {
             try {
@@ -775,10 +875,17 @@
             qrModal.classList.remove('active');
         }
         
+        function closeScanModalFunc() {
+            scanning = false;
+            stopCamera();
+            scanModal.classList.remove('active');
+        }
+        
         closeModalBtn.addEventListener('click', closeModal);
         cancelBtn.addEventListener('click', closeModal);
         closeMenuModalBtn.addEventListener('click', closeMenuModal);
         closeQrModalBtn.addEventListener('click', closeQrModalFunc);
+        closeScanModalBtn.addEventListener('click', closeScanModalFunc);
         
         formModal.addEventListener('click', (e) => {
             if (e.target === formModal) closeModal();
@@ -790,6 +897,10 @@
         
         qrModal.addEventListener('click', (e) => {
             if (e.target === qrModal) closeQrModalFunc();
+        });
+        
+        scanModal.addEventListener('click', (e) => {
+            if (e.target === scanModal) closeScanModalFunc();
         });
         
         // Filter buttons
