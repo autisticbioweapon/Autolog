@@ -10,7 +10,6 @@
     <link rel="apple-touch-icon" href="icon.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -18,182 +17,119 @@
             padding: 20px;
             padding-bottom: 100px;
         }
-        
         .container { max-width: 600px; margin: 0 auto; }
-        
         header { text-align: center; color: white; margin-bottom: 30px; position: relative; }
         h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
         .subtitle { font-size: 14px; opacity: 0.9; }
-        
         .menu-btn {
             position: absolute; right: 0; top: 0; background: rgba(255,255,255,0.2);
             border: none; color: white; width: 40px; height: 40px; border-radius: 50%;
             font-size: 24px; cursor: pointer; backdrop-filter: blur(10px);
         }
-        
         .vehicle-selector {
             background: rgba(255,255,255,0.2); padding: 16px; border-radius: 16px;
             margin-bottom: 20px; backdrop-filter: blur(10px);
         }
-        
         .vehicle-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .vehicle-label { color: white; font-size: 14px; font-weight: 600; }
-        
         .add-vehicle-btn {
             background: white; color: #667eea; border: none; padding: 6px 12px;
             border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
         }
-        
         .vehicle-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
-        
         .vehicle-tab {
             background: rgba(255,255,255,0.3); color: white; border: none;
             padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 600;
-            cursor: pointer; white-space: nowrap; transition: all 0.3s; position: relative;
+            cursor: pointer; white-space: nowrap; transition: all 0.3s;
         }
-        
         .vehicle-tab.active { background: white; color: #667eea; }
         .vehicle-tab-delete { margin-left: 8px; color: #ff5252; cursor: pointer; }
-        
         .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        
         .stat-card {
             background: rgba(255, 255, 255, 0.95); padding: 16px; border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        
         .stat-label {
             font-size: 12px; color: #666; text-transform: uppercase;
             letter-spacing: 0.5px; margin-bottom: 4px;
         }
-        
         .stat-value { font-size: 24px; font-weight: 700; color: #667eea; }
-        
         .form-group { margin-bottom: 16px; }
-        
-        label {
-            display: block; font-size: 14px; font-weight: 600;
-            color: #333; margin-bottom: 8px;
-        }
-        
+        label { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px; }
         input, select, textarea {
             width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 12px;
             font-size: 16px; transition: all 0.3s; font-family: inherit;
         }
-        
         input:focus, select:focus, textarea:focus {
-            outline: none; border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-        
         textarea { resize: vertical; min-height: 80px; }
-        
         .btn {
             width: 100%; padding: 16px; border: none; border-radius: 12px;
             font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
-        
         .btn-primary:active { transform: translateY(1px); }
         .btn-secondary { background: #f5f5f5; color: #333; margin-top: 8px; }
-        
-        .logs-header {
-            display: flex; justify-content: space-between;
-            align-items: center; margin-bottom: 16px;
-        }
-        
+        .logs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .logs-title { font-size: 20px; font-weight: 700; color: white; }
-        
         .filter-buttons { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-        
         .filter-btn {
             padding: 8px 16px; border: 2px solid rgba(255,255,255,0.3);
             background: transparent; color: white; border-radius: 20px;
             font-size: 14px; cursor: pointer; transition: all 0.3s;
         }
-        
         .filter-btn.active { background: white; color: #667eea; }
-        
         .log-entry {
             background: white; border-radius: 16px; padding: 20px;
-            margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: relative;
+            margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: relative;
         }
-        
-        .log-header {
-            display: flex; justify-content: space-between;
-            align-items: start; margin-bottom: 12px;
-        }
-        
+        .log-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; }
         .log-date { font-weight: 700; color: #667eea; font-size: 16px; }
-        
-        .log-type {
-            display: inline-block; padding: 4px 12px; border-radius: 12px;
-            font-size: 12px; font-weight: 600;
-        }
-        
+        .log-type { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
         .type-maintenance { background: #e3f2fd; color: #1976d2; }
         .type-repair { background: #fff3e0; color: #f57c00; }
         .type-inspection { background: #f3e5f5; color: #7b1fa2; }
         .type-other { background: #e8f5e9; color: #388e3c; }
-        
         .log-mileage { font-size: 14px; color: #666; margin-bottom: 8px; }
         .log-description { color: #333; line-height: 1.5; margin-bottom: 12px; }
         .log-cost { font-size: 18px; font-weight: 700; color: #333; }
-        
         .delete-btn {
             position: absolute; top: 16px; right: 16px; background: #ff5252;
             color: white; border: none; width: 32px; height: 32px; border-radius: 50%;
-            cursor: pointer; font-size: 18px; display: flex;
-            align-items: center; justify-content: center;
+            cursor: pointer; font-size: 18px;
         }
-        
         .empty-state { text-align: center; padding: 40px 20px; color: white; }
         .empty-state-icon { font-size: 64px; margin-bottom: 16px; opacity: 0.5; }
-        
         .toggle-form {
             position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px;
             border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; border: none; font-size: 32px; cursor: pointer;
             box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4); z-index: 100;
         }
-        
-        .form-modal, .menu-modal {
+        .modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5); display: none; align-items: center;
             justify-content: center; z-index: 1000; padding: 20px;
         }
-        
-        .form-modal.active, .menu-modal.active { display: flex; }
-        
+        .modal.active { display: flex; }
         .modal-content {
             background: white; border-radius: 20px; padding: 24px;
             max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto;
         }
-        
-        .modal-header {
-            display: flex; justify-content: space-between;
-            align-items: center; margin-bottom: 20px;
-        }
-        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .modal-title { font-size: 24px; font-weight: 700; color: #333; }
-        
         .close-btn {
             background: none; border: none; font-size: 28px; color: #999;
-            cursor: pointer; width: 32px; height: 32px; display: flex;
-            align-items: center; justify-content: center;
+            cursor: pointer; width: 32px; height: 32px;
         }
-        
         .menu-item {
             padding: 16px; border-bottom: 1px solid #eee; cursor: pointer;
             display: flex; align-items: center; gap: 12px; transition: background 0.2s;
         }
-        
         .menu-item:hover { background: #f5f5f5; }
         .menu-item:last-child { border-bottom: none; }
         .menu-icon { font-size: 24px; width: 32px; }
@@ -201,32 +137,14 @@
         .menu-label { font-weight: 600; color: #333; display: block; }
         .menu-desc { font-size: 12px; color: #666; margin-top: 2px; }
         .file-input { display: none; }
-        
-        .sync-status {
-            background: rgba(255,255,255,0.2); color: white; padding: 12px 16px;
+        .status {
+            background: rgba(76, 175, 80, 0.9); color: white; padding: 12px 16px;
             border-radius: 12px; margin-bottom: 16px; font-size: 14px;
-            text-align: center; backdrop-filter: blur(10px);
+            text-align: center; display: none;
         }
-        
-        .sync-status.success { background: rgba(76, 175, 80, 0.9); }
-        .sync-status.error { background: rgba(244, 67, 54, 0.9); }
-        
-        .export-options {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;
-        }
-        
-        .export-btn {
-            padding: 12px; border: 2px solid #667eea; background: white;
-            color: #667eea; border-radius: 12px; font-size: 14px;
-            font-weight: 600; cursor: pointer; transition: all 0.3s;
-        }
-        
-        .export-btn:hover { background: #667eea; color: white; }
-        
         @media (max-width: 480px) {
             body { padding: 16px; padding-bottom: 80px; }
             h1 { font-size: 24px; }
-            .stat-value { font-size: 20px; }
         }
     </style>
 </head>
@@ -238,7 +156,7 @@
             <p class="subtitle">Track your vehicle's service history</p>
         </header>
         
-        <div id="syncStatus" style="display: none;"></div>
+        <div id="status" class="status"></div>
         
         <div class="vehicle-selector">
             <div class="vehicle-header">
@@ -275,12 +193,11 @@
     
     <button class="toggle-form" id="toggleForm">+</button>
     
-    <!-- Add Vehicle Modal -->
-    <div class="form-modal" id="addVehicleModal">
+    <div class="modal" id="addVehicleModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Add Vehicle</h2>
-                <button class="close-btn" id="closeAddVehicleModal">&times;</button>
+                <button class="close-btn" id="closeAddVehicle">&times;</button>
             </div>
             <form id="addVehicleForm">
                 <div class="form-group">
@@ -293,12 +210,11 @@
         </div>
     </div>
     
-    <!-- Add Log Form Modal -->
-    <div class="form-modal" id="formModal">
+    <div class="modal" id="logModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title">Add Service Log</h2>
-                <button class="close-btn" id="closeModal">&times;</button>
+                <button class="close-btn" id="closeLog">&times;</button>
             </div>
             <form id="logForm">
                 <div class="form-group">
@@ -327,23 +243,22 @@
                     <input type="number" id="cost" placeholder="0.00" step="0.01" min="0">
                 </div>
                 <button type="submit" class="btn btn-primary">Add Service Log</button>
-                <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="button" class="btn btn-secondary" id="cancelLog">Cancel</button>
             </form>
         </div>
     </div>
     
-    <!-- Menu Modal -->
-    <div class="menu-modal" id="menuModal">
+    <div class="modal" id="menuModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Export & Settings</h2>
-                <button class="close-btn" id="closeMenuModal">&times;</button>
+                <h2 class="modal-title">Data & Settings</h2>
+                <button class="close-btn" id="closeMenu">&times;</button>
             </div>
-            <div class="menu-item" id="exportMenu">
+            <div class="menu-item" id="exportData">
                 <span class="menu-icon">💾</span>
                 <div class="menu-text">
                     <span class="menu-label">Export Data</span>
-                    <span class="menu-desc">Download in various formats</span>
+                    <span class="menu-desc">Download backup as JSON file</span>
                 </div>
             </div>
             <div class="menu-item" id="importData">
@@ -351,20 +266,6 @@
                 <div class="menu-text">
                     <span class="menu-label">Import Data</span>
                     <span class="menu-desc">Restore from backup file</span>
-                </div>
-            </div>
-            <div class="menu-item" id="shareData">
-                <span class="menu-icon">📤</span>
-                <div class="menu-text">
-                    <span class="menu-label">Share via QR Code</span>
-                    <span class="menu-desc">Generate QR code for another device</span>
-                </div>
-            </div>
-            <div class="menu-item" id="scanQR">
-                <span class="menu-icon">📷</span>
-                <div class="menu-text">
-                    <span class="menu-label">Scan QR Code</span>
-                    <span class="menu-desc">Import data from another device</span>
                 </div>
             </div>
             <div class="menu-item" id="clearData">
@@ -377,85 +278,26 @@
         </div>
     </div>
     
-    <!-- Export Options Modal -->
-    <div class="menu-modal" id="exportModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Export Options</h2>
-                <button class="close-btn" id="closeExportModal">&times;</button>
-            </div>
-            <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Choose how you would like to export your data:</p>
-            <div class="export-options">
-                <button class="export-btn" id="exportJSON">
-                    <div>📄 JSON</div>
-                    <div style="font-size: 11px; margin-top: 4px;">For backup</div>
-                </button>
-                <button class="export-btn" id="exportCSV">
-                    <div>📊 CSV</div>
-                    <div style="font-size: 11px; margin-top: 4px;">For Excel</div>
-                </button>
-                <button class="export-btn" id="exportPDF">
-                    <div>📑 PDF</div>
-                    <div style="font-size: 11px; margin-top: 4px;">For printing</div>
-                </button>
-                <button class="export-btn" id="exportTXT">
-                    <div>📝 Text</div>
-                    <div style="font-size: 11px; margin-top: 4px;">Simple list</div>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- QR Code Modal -->
-    <div class="menu-modal" id="qrModal">
-        <div class="modal-content" style="text-align: center;">
-            <div class="modal-header">
-                <h2 class="modal-title">Scan to Transfer</h2>
-                <button class="close-btn" id="closeQrModal">&times;</button>
-            </div>
-            <p style="color: #666; margin-bottom: 20px;">Scan this QR code with your other device to transfer all data</p>
-            <div id="qrcode" style="display: inline-block; padding: 20px; background: white;"></div>
-            <p style="color: #666; margin-top: 20px; font-size: 12px;">Open this app on another device and tap Scan QR Code from the menu</p>
-        </div>
-    </div>
-    
-    <!-- QR Scanner Modal -->
-    <div class="menu-modal" id="scanModal">
-        <div class="modal-content" style="text-align: center;">
-            <div class="modal-header">
-                <h2 class="modal-title">Scan QR Code</h2>
-                <button class="close-btn" id="closeScanModal">&times;</button>
-            </div>
-            <p style="color: #666; margin-bottom: 20px;">Position the QR code within the frame</p>
-            <video id="qrVideo" style="width: 100%; max-width: 400px; border-radius: 12px; background: #000;"></video>
-            <p style="color: #666; margin-top: 20px; font-size: 12px;">Camera access required to scan</p>
-        </div>
-    </div>
-    
     <input type="file" id="fileInput" class="file-input" accept=".json">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         let vehicles = JSON.parse(localStorage.getItem('vehicles') || '[]');
         let currentVehicleId = localStorage.getItem('currentVehicleId');
         
         const oldLogs = JSON.parse(localStorage.getItem('maintenanceLogs') || '[]');
         if (oldLogs.length > 0 && vehicles.length === 0) {
-            const defaultVehicle = { id: Date.now().toString(), name: 'My Vehicle', logs: oldLogs };
-            vehicles.push(defaultVehicle);
-            currentVehicleId = defaultVehicle.id;
+            vehicles.push({id: Date.now().toString(), name: 'My Vehicle', logs: oldLogs});
+            currentVehicleId = vehicles[0].id;
             localStorage.setItem('vehicles', JSON.stringify(vehicles));
             localStorage.setItem('currentVehicleId', currentVehicleId);
             localStorage.removeItem('maintenanceLogs');
         }
         
         if (vehicles.length === 0) {
-            const defaultVehicle = { id: Date.now().toString(), name: 'My Vehicle', logs: [] };
-            vehicles.push(defaultVehicle);
-            currentVehicleId = defaultVehicle.id;
-            saveData();
+            vehicles.push({id: Date.now().toString(), name: 'My Vehicle', logs: []});
+            currentVehicleId = vehicles[0].id;
+            localStorage.setItem('vehicles', JSON.stringify(vehicles));
+            localStorage.setItem('currentVehicleId', currentVehicleId);
         }
         
         if (!currentVehicleId || !vehicles.find(v => v.id === currentVehicleId)) {
@@ -464,147 +306,263 @@
         }
         
         let currentFilter = 'all';
-        let scanning = false;
-        let videoStream = null;
-        
-        const formModal = document.getElementById('formModal');
-        const menuModal = document.getElementById('menuModal');
-        const exportModal = document.getElementById('exportModal');
-        const qrModal = document.getElementById('qrModal');
-        const scanModal = document.getElementById('scanModal');
-        const addVehicleModal = document.getElementById('addVehicleModal');
-        const vehicleTabsDiv = document.getElementById('vehicleTabs');
-        const logsDiv = document.getElementById('logs');
-        const totalLogsEl = document.getElementById('totalLogs');
-        const totalCostEl = document.getElementById('totalCost');
-        const syncStatusEl = document.getElementById('syncStatus');
-        const qrVideo = document.getElementById('qrVideo');
         
         document.getElementById('date').valueAsDate = new Date();
         
-        function saveData() {
+        function save() {
             localStorage.setItem('vehicles', JSON.stringify(vehicles));
             localStorage.setItem('currentVehicleId', currentVehicleId);
         }
         
-        function getCurrentVehicle() {
+        function getCurrent() {
             return vehicles.find(v => v.id === currentVehicleId);
         }
         
-        function showStatus(message, type) {
-            syncStatusEl.textContent = message;
-            syncStatusEl.className = 'sync-status ' + type;
-            syncStatusEl.style.display = 'block';
-            setTimeout(() => { syncStatusEl.style.display = 'none'; }, 3000);
+        function showStatus(msg) {
+            const el = document.getElementById('status');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 3000);
         }
         
-        function renderVehicleTabs() {
-            vehicleTabsDiv.innerHTML = vehicles.map(vehicle => {
-                const active = vehicle.id === currentVehicleId ? 'active' : '';
-                const deleteBtn = vehicles.length > 1 ? '<span class="vehicle-tab-delete" data-id="' + vehicle.id + '">×</span>' : '';
-                return '<button class="vehicle-tab ' + active + '" data-id="' + vehicle.id + '">' + vehicle.name + deleteBtn + '</button>';
-            }).join('');
+        function renderTabs() {
+            const html = vehicles.map(v => 
+                `<button class="vehicle-tab${v.id === currentVehicleId ? ' active' : ''}" data-id="${v.id}">
+                    ${v.name}${vehicles.length > 1 ? `<span class="vehicle-tab-delete" data-id="${v.id}">×</span>` : ''}
+                </button>`
+            ).join('');
+            document.getElementById('vehicleTabs').innerHTML = html;
             
-            document.querySelectorAll('.vehicle-tab').forEach(tab => {
-                tab.addEventListener('click', (e) => {
+            document.querySelectorAll('.vehicle-tab').forEach(t => {
+                t.addEventListener('click', e => {
                     if (!e.target.classList.contains('vehicle-tab-delete')) {
-                        currentVehicleId = tab.dataset.id;
-                        saveData();
-                        renderVehicleTabs();
+                        currentVehicleId = t.dataset.id;
+                        save();
+                        renderTabs();
                         renderLogs();
                     }
                 });
             });
             
-            document.querySelectorAll('.vehicle-tab-delete').forEach(btn => {
-                btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.vehicle-tab-delete').forEach(b => {
+                b.addEventListener('click', e => {
                     e.stopPropagation();
-                    deleteVehicle(btn.dataset.id);
+                    if (vehicles.length === 1) {
+                        alert('Cannot delete the last vehicle.');
+                        return;
+                    }
+                    const v = vehicles.find(x => x.id === b.dataset.id);
+                    if (confirm(`Delete "${v.name}" and all its logs?`)) {
+                        vehicles = vehicles.filter(x => x.id !== b.dataset.id);
+                        if (currentVehicleId === b.dataset.id) currentVehicleId = vehicles[0].id;
+                        save();
+                        renderTabs();
+                        renderLogs();
+                        showStatus('Vehicle deleted');
+                    }
                 });
             });
         }
         
-        function deleteVehicle(vehicleId) {
-            if (vehicles.length === 1) {
-                alert('Cannot delete the last vehicle. Add another vehicle first.');
-                return;
-            }
-            
-            const vehicle = vehicles.find(v => v.id === vehicleId);
-            if (confirm('Delete "' + vehicle.name + '" and all its logs?')) {
-                vehicles = vehicles.filter(v => v.id !== vehicleId);
-                if (currentVehicleId === vehicleId) {
-                    currentVehicleId = vehicles[0].id;
-                }
-                saveData();
-                renderVehicleTabs();
-                renderLogs();
-                showStatus('Vehicle deleted', 'success');
-            }
-        }
-        
         function updateStats() {
-            const vehicle = getCurrentVehicle();
-            const logs = vehicle ? vehicle.logs : [];
-            totalLogsEl.textContent = logs.length;
-            const total = logs.reduce((sum, log) => sum + (parseFloat(log.cost) || 0), 0);
-            totalCostEl.textContent = '$' + total.toFixed(2);
+            const v = getCurrent();
+            const logs = v ? v.logs : [];
+            document.getElementById('totalLogs').textContent = logs.length;
+            const total = logs.reduce((s, l) => s + (parseFloat(l.cost) || 0), 0);
+            document.getElementById('totalCost').textContent = '$' + total.toFixed(2);
         }
         
         function renderLogs() {
-            const vehicle = getCurrentVehicle();
-            const logs = vehicle ? vehicle.logs : [];
-            const filteredLogs = currentFilter === 'all' ? logs : logs.filter(log => log.type === currentFilter);
+            const v = getCurrent();
+            const logs = v ? v.logs : [];
+            const filtered = currentFilter === 'all' ? logs : logs.filter(l => l.type === currentFilter);
             
-            if (filteredLogs.length === 0) {
-                logsDiv.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><p>No service logs yet. Tap the + button to add your first entry!</p></div>';
+            if (filtered.length === 0) {
+                document.getElementById('logs').innerHTML = 
+                    '<div class="empty-state"><div class="empty-state-icon">📋</div>' +
+                    '<p>No service logs yet. Tap the + button to add your first entry!</p></div>';
                 updateStats();
                 return;
             }
             
-            const sortedLogs = filteredLogs.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            logsDiv.innerHTML = sortedLogs.map(log => {
-                const logIndex = logs.indexOf(log);
-                const dateStr = new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                const costHtml = log.cost ? '<div class="log-cost">💰 $' + parseFloat(log.cost).toFixed(2) + '</div>' : '';
-                return '<div class="log-entry"><button class="delete-btn" onclick="deleteLog(' + logIndex + ')">×</button><div class="log-header"><div class="log-date">' + dateStr + '</div><span class="log-type type-' + log.type + '">' + log.type + '</span></div><div class="log-mileage">📍 ' + parseInt(log.mileage).toLocaleString() + ' miles</div><div class="log-description">' + log.description + '</div>' + costHtml + '</div>';
+            const sorted = filtered.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+            const html = sorted.map(log => {
+                const idx = logs.indexOf(log);
+                const date = new Date(log.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
+                const cost = log.cost ? `<div class="log-cost">💰 $${parseFloat(log.cost).toFixed(2)}</div>` : '';
+                return `<div class="log-entry">
+                    <button class="delete-btn" onclick="deleteLog(${idx})">×</button>
+                    <div class="log-header">
+                        <div class="log-date">${date}</div>
+                        <span class="log-type type-${log.type}">${log.type}</span>
+                    </div>
+                    <div class="log-mileage">📍 ${parseInt(log.mileage).toLocaleString()} miles</div>
+                    <div class="log-description">${log.description}</div>${cost}
+                </div>`;
             }).join('');
             
+            document.getElementById('logs').innerHTML = html;
             updateStats();
         }
         
-        function deleteLog(index) {
+        function deleteLog(idx) {
             if (confirm('Delete this service log?')) {
-                const vehicle = getCurrentVehicle();
-                vehicle.logs.splice(index, 1);
-                saveData();
+                getCurrent().logs.splice(idx, 1);
+                save();
                 renderLogs();
-                showStatus('Log deleted', 'success');
+                showStatus('Log deleted');
             }
         }
         
-        function downloadFile(content, filename, mimeType) {
-            const blob = new Blob([content], { type: mimeType });
+        document.getElementById('addVehicleBtn').addEventListener('click', () => {
+            document.getElementById('addVehicleModal').classList.add('active');
+        });
+        
+        document.getElementById('addVehicleForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const name = document.getElementById('vehicleName').value.trim();
+            if (name) {
+                vehicles.push({id: Date.now().toString(), name, logs: []});
+                currentVehicleId = vehicles[vehicles.length - 1].id;
+                save();
+                renderTabs();
+                renderLogs();
+                document.getElementById('addVehicleForm').reset();
+                document.getElementById('addVehicleModal').classList.remove('active');
+                showStatus(`${name} added!`);
+            }
+        });
+        
+        document.getElementById('closeAddVehicle').addEventListener('click', () => {
+            document.getElementById('addVehicleModal').classList.remove('active');
+        });
+        
+        document.getElementById('cancelAddVehicle').addEventListener('click', () => {
+            document.getElementById('addVehicleModal').classList.remove('active');
+        });
+        
+        document.getElementById('toggleForm').addEventListener('click', () => {
+            document.getElementById('logModal').classList.add('active');
+        });
+        
+        document.getElementById('logForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const log = {
+                date: document.getElementById('date').value,
+                mileage: document.getElementById('mileage').value,
+                type: document.getElementById('type').value,
+                description: document.getElementById('description').value,
+                cost: document.getElementById('cost').value || '0'
+            };
+            getCurrent().logs.push(log);
+            save();
+            renderLogs();
+            document.getElementById('logForm').reset();
+            document.getElementById('date').valueAsDate = new Date();
+            document.getElementById('logModal').classList.remove('active');
+            showStatus('Log added!');
+        });
+        
+        document.getElementById('closeLog').addEventListener('click', () => {
+            document.getElementById('logModal').classList.remove('active');
+        });
+        
+        document.getElementById('cancelLog').addEventListener('click', () => {
+            document.getElementById('logModal').classList.remove('active');
+        });
+        
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            document.getElementById('menuModal').classList.add('active');
+        });
+        
+        document.getElementById('closeMenu').addEventListener('click', () => {
+            document.getElementById('menuModal').classList.remove('active');
+        });
+        
+        document.getElementById('exportData').addEventListener('click', () => {
+            const data = JSON.stringify(vehicles, null, 2);
+            const blob = new Blob([data], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
+            a.download = `vehicle-maintenance-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
-        }
+            document.getElementById('menuModal').classList.remove('active');
+            showStatus('Data exported!');
+        });
         
-        function exportAsJSON() {
-            const dataStr = JSON.stringify(vehicles, null, 2);
-            downloadFile(dataStr, 'vehicle-maintenance-' + new Date().toISOString().split('T')[0] + '.json', 'application/json');
-            closeExportModal();
-            showStatus('Data exported as JSON!', 'success');
-        }
+        document.getElementById('importData').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
         
-        function exportAsCSV() {
-            let csv = 'Vehicle,Date,Mileage,Type,Description,Cost\n';
-            vehicles.forEach(vehicle => {
-                vehicle.logs.forEach(log => {
-                    csv += '"' + vehicle.name + '","' + log.date + '","' + log.
+        document.getElementById('fileInput').addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (Array.isArray(data)) {
+                        if (data[0] && data[0].logs) {
+                            if (confirm(`Import ${data.length} vehicle(s)? This will replace your current data.`)) {
+                                vehicles = data;
+                                currentVehicleId = vehicles[0].id;
+                                save();
+                                renderTabs();
+                                renderLogs();
+                                document.getElementById('menuModal').classList.remove('active');
+                                showStatus('Data imported!');
+                            }
+                        } else {
+                            if (confirm(`Import ${data.length} logs as new vehicle?`)) {
+                                vehicles.push({id: Date.now().toString(), name: 'Imported Vehicle', logs: data});
+                                currentVehicleId = vehicles[vehicles.length - 1].id;
+                                save();
+                                renderTabs();
+                                renderLogs();
+                                document.getElementById('menuModal').classList.remove('active');
+                                showStatus('Data imported!');
+                            }
+                        }
+                    }
+                } catch (err) {
+                    alert('Error importing data. Check file format.');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+        
+        document.getElementById('clearData').addEventListener('click', () => {
+            if (confirm('Delete ALL vehicles and logs? Cannot be undone!')) {
+                if (confirm('Really sure? This will delete everything.')) {
+                    vehicles = [{id: Date.now().toString(), name: 'My Vehicle', logs: []}];
+                    currentVehicleId = vehicles[0].id;
+                    save();
+                    renderTabs();
+                    renderLogs();
+                    document.getElementById('menuModal').classList.remove('active');
+                    showStatus('All data cleared');
+                }
+            }
+        });
+        
+        document.querySelectorAll('.filter-btn').forEach(b => {
+            b.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                currentFilter = b.dataset.filter;
+                renderLogs();
+            });
+        });
+        
+        renderTabs();
+        renderLogs();
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>
